@@ -143,7 +143,7 @@ bash run_s2_train_fa_fi.sh
 - NC score pool construction can be performed with this code set.
 
 ```
-bash run_s4_test.sh
+bash run_s3_test.sh
 ```
 
 ---
