@@ -14,7 +14,6 @@ from mmdet3d.models import builder
 from plugin.futr3d.core.bbox.utils import normalize_bbox, denormalize_bbox
 from plugin.futr3d.core.feature_aligner.aligner import FeatureAligner
 from plugin.futr3d.core.feature_aligner.center_loss import CrossModalCenterLoss
-from plugin.futr3d.core.feature_aligner.antipodal_loss import AntipodalLoss
 
 
 @HEADS.register_module()
