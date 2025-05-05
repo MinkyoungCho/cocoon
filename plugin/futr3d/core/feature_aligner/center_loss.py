@@ -104,7 +104,7 @@ class CrossModalCenterLoss(nn.Module):
 
         loss_center = loss_center_perquery.sum()
 
-        return loss_center / num_queries * 10
+        return loss_center / num_queries * 5
 
     def _calculate_geomed_loss(
         self, img_feats_masked, pts_feats_masked, centers_masked, labels, num_queries
