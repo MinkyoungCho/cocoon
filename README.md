@@ -51,7 +51,7 @@ pip3 install -v -e .
      ```
       cd ./data/ && mv nuscenes nuscenes_original
      ```
-  - Generate Proper Training Set
+  - Generate Proper Training Set (s1, s2, s3)
      ```
       # replace `<python_path>/site-packages/nuscenes/utils/splits.py` with `splits_train_test.py`.
       cd ./data && mkdir nuscenes_propertrain_val && cd nuscenes_propertrain_val
@@ -67,7 +67,7 @@ pip3 install -v -e .
       ln -sf nuscenes_propertrain_val nuscenes 
       ```
 
-   - Generate Calibration Set
+   - Generate Calibration Set (s3 -- with this dataset, we can generate NC score pool) 
    
       ```
       # replace `<python_path>/site-packages/nuscenes/utils/splits.py` with `splits_calib.py`.
