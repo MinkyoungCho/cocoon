@@ -36,8 +36,6 @@ class CrossModalCenterLoss(nn.Module):
             self.centers5 = nn.Parameter(torch.randn(self.num_classes, self.feat_dim))
 
         assert mode in ["train", "test"]
-        # if mode == "test":
-        #     self.load_model()
 
     def forward(self, labels, img_feats, pts_feats, dec_layer_idx=None):
         """
@@ -45,7 +43,6 @@ class CrossModalCenterLoss(nn.Module):
             X_feats: feature matrix with shape (num_queries, feat_dim).
             labels: ground truth labels with shape (num_queries).
         """
-        # print("[Current Loaded Model] center", self.centers)
 
         num_queries = img_feats.size(1)
 
@@ -100,14 +97,11 @@ class CrossModalCenterLoss(nn.Module):
     def _calculate_center_loss(
         self, img_feats_masked, pts_feats_masked, centers_masked, labels, num_queries
     ):
-        # Compute the L2 norms
-        norms_img = torch.norm(img_feats_masked - centers_masked, p=2, dim=1)  # [33]
-        norms_pts = torch.norm(pts_feats_masked - centers_masked, p=2, dim=1)  # [33]
+        norms_img = torch.norm(img_feats_masked - centers_masked, p=2, dim=1) 
+        norms_pts = torch.norm(pts_feats_masked - centers_masked, p=2, dim=1) 
 
-        # Calculate the sum of norms for each query
         loss_center_perquery = norms_img + norms_pts
 
-        # Sum over queries
         loss_center = loss_center_perquery.sum()
 
         return loss_center / num_queries * 10
@@ -115,26 +109,17 @@ class CrossModalCenterLoss(nn.Module):
     def _calculate_geomed_loss(
         self, img_feats_masked, pts_feats_masked, centers_masked, labels, num_queries
     ):
-        numerator_img = img_feats_masked - centers_masked  # [33, 128]
+        numerator_img = img_feats_masked - centers_masked  
         numerator_pts = pts_feats_masked - centers_masked
 
         denominator_img = torch.norm(numerator_img, p=2, dim=1, keepdim=True)  # [33, 1]
         denominator_pts = torch.norm(numerator_pts, p=2, dim=1, keepdim=True)
 
-        normalized_img = numerator_img / denominator_img  # [33, 128]
-        normalized_pts = numerator_pts / denominator_pts  # [33, 128]
-        combined_terms = normalized_img + normalized_pts  # [33, 128]
+        normalized_img = numerator_img / denominator_img  
+        normalized_pts = numerator_pts / denominator_pts  
+        combined_terms = normalized_img + normalized_pts  
 
-        # assert (
-        #     torch.norm(img_feats_masked[0] - centers_masked[0], p=2)
-        #     == denominator_img[0],
-        #     f"{torch.norm(img_feats_masked[0] - centers_masked[0], p=2)} != {denominator_img[0]}",
-        # )
-        # assert (
-        #     torch.norm(pts_feats_masked[0] - centers_masked[0], p=2)
-        #     == denominator_pts[0],
-        #     f"{torch.norm(pts_feats_masked[0] - centers_masked[0], p=2)} != {denominator_pts[0]}",
-        # )
+       
         assert (
             (img_feats_masked[0] - centers_masked[0]) / denominator_img[0]
             == normalized_img[0]
@@ -145,7 +130,7 @@ class CrossModalCenterLoss(nn.Module):
         ).all()
 
         # Sum over queries
-        sum_combined_terms = combined_terms.sum(dim=0)  # [128]
+        sum_combined_terms = combined_terms.sum(dim=0) 
         loss_geomed = torch.norm(sum_combined_terms, p=2, dim=0) ** 2  # []: constant
 
         return loss_geomed / num_queries * 3
@@ -157,19 +142,3 @@ class CrossModalCenterLoss(nn.Module):
         C2 = self_centers.unsqueeze(0).expand(num_classes, num_classes, 128)
         loss_sep = -lambda_val * (C1 - C2).pow(2).sum(dim=2).triu(1).sum()
         return loss_sep / num_queries / 7
-
-    # def load_model(self):
-    #     curr_model = "/home/minkycho/adafuse/work_dirs/fusion_train/epoch_6.pth"
-    #     print("=" * 50)
-    #     print(f"[!CHECK! @ CrossModalCenterLoss] current model: {curr_model}")
-    #     print("=" * 50)
-
-    #     state_dict = torch.load(curr_model)
-    #     new_state_dict = {}
-    #     for key in state_dict["state_dict"].keys():
-    #         if "center" in key:
-    #             new_key = key.replace("pts_bbox_head.center_loss.", "")
-    #             new_state_dict[new_key] = state_dict["state_dict"][key]
-    #             a = state_dict["state_dict"][key]
-    #             print(f"[Pretrained] {key} {a}: Same?")
-    #     self.load_state_dict(new_state_dict)

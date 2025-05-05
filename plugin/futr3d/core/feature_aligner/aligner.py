@@ -16,11 +16,8 @@ class FeatureAligner(nn.Module):
         self.fc8 = nn.Linear(output_dim, output_dim)
 
         assert mode in ["train", "test"]
-        # if mode == "test":
-        #     self.load_model()
 
     def forward(self, x):
-        # print("[Current Loaded Model] fc1.weight", self.fc1.weight)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
@@ -31,19 +28,4 @@ class FeatureAligner(nn.Module):
         x = self.fc8(x)
         return x
 
-    # def load_model(self):
-    #     curr_model = "/home/minkycho/adafuse/work_dirs/fusion_train/epoch_6.pth"
-    #     print("=" * 50)
-    #     print(f"[!CHECK! @ FeatureAligner] current model: {curr_model}")
-    #     print("=" * 50)
 
-    #     state_dict = torch.load(curr_model)
-    #     new_state_dict = {}
-    #     for key in state_dict["state_dict"].keys():
-    #         if "aligner" in key:
-    #             new_key = key.replace("pts_bbox_head.feature_aligner.", "")
-    #             new_state_dict[new_key] = state_dict["state_dict"][key]
-    #             a = state_dict["state_dict"][key]
-    #             print(f"[Pretrained] {key} {a} Same?")
-
-    #     self.load_state_dict(new_state_dict)
