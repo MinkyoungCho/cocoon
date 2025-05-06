@@ -6,15 +6,6 @@ Cocoon is a new object- and feature-level uncertainty-aware multimodal fusion fr
 
 ---
 
-## Overview
-
-This repo provides a modular pipeline for Cocoon, built on top of a base model ([FUTR3D](https://github.com/NVlabs/FUTR3D)).
-
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/3704fd18-a187-45bd-9b55-bb26ce7b6500" />
-
-
----
-
 ## Pipeline Stages
 
 ### 0. Conda Environment Setup
